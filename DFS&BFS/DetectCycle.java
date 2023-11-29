@@ -4,23 +4,22 @@
  */
 package labReport.two;
 
+import java.io.File;
+import java.io.IOException;
+import java.util.LinkedList;
+import java.util.Queue;
+import java.util.Scanner;
+
 /**
  *
  * @author Sohel
  */
-import java.io.File;
-import java.util.Scanner;
-import java.io.IOException;
-import java.util.LinkedList;
-import java.util.Queue;
-
-
-public class BFS {
+public class detectCycle {
     public static void main(String[] args) {
-        File file = new File("C:/Users/Sohel/Desktop/input.txt");
+        File file = new File("C:/Users/Sohel/Desktop/cycle.txt");
        
-        Scanner sc = null;
-        int vertices = 0,edges, start = 0;
+        Scanner sc;
+        int vertices = 0,edges, start=0;
         int matrix[][] = new int[0][0];
         try{
             sc = new Scanner(file);
@@ -31,7 +30,7 @@ public class BFS {
             for(int i = 0; i < edges; i++){
                 int first = sc.nextInt();
                 int second = sc.nextInt();
-                matrix[first][second] = matrix[second][first] = 1;
+                matrix[first][second] = 1;
             }
             
             start = sc.nextInt();
@@ -42,7 +41,10 @@ public class BFS {
         
         int visited[] = new int[vertices];
         int level[] = new int[vertices];
-        for(int i = 0; i < vertices; i++) visited[i] = 0;
+        boolean cycle = false;
+        for(int i = 0; i < vertices; i++) {
+            visited[i] = 0;
+        }
         
         visited[start] = 1;
         level[start] = 0;
@@ -52,8 +54,10 @@ public class BFS {
         
         while(!queue.isEmpty()){
             int parent = queue.poll();
-            System.out.print(parent + " ");
             for(int i = 0; i < vertices; i++){
+                if(matrix[parent][i] == 1 && visited[i] == 2){
+                    cycle = true;
+                }
                 if(matrix[parent][i] == 1 && visited[i] == 0){
                     queue.add(i);
                     level[i] = level[parent] + 1;
@@ -63,6 +67,10 @@ public class BFS {
             visited[parent] = 2;
         }
         
-       
+        if(cycle){
+            System.out.println("This graph has cycle");
+        }else {
+            System.out.println("This graph doesn't have cycle");
+        }
     }
 }
